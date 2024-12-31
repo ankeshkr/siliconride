@@ -1,0 +1,17 @@
+<h2>Select Your Seat</h2>
+<form method="post">
+    {% csrf_token %}
+    {% for data in travellers_data %}
+        <h3>{{ data.traveller.name }}</h3>
+        <p>Total Seats: {{ data.traveller.total_seats }}</p>
+        <p>Available Seats:</p>
+        <select name="seat_number" required>
+            {% for seat in data.available_seats %}
+                <option value="{{ seat }}">{{ seat }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="traveller_id" value="{{ data.traveller.id }}">
+        <button type="submit">Book Seat</button>
+        <hr>
+    {% endfor %}
+</form>

@@ -1,0 +1,25 @@
+<!-- otp_login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OTP Login</title>
+</head>
+<body>
+    <h2>OTP Login</h2>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {% if otp_sent %}
+            <label for="otp">Enter OTP:</label>
+            <input type="text" name="otp" id="otp" required>
+            <input type="hidden" name="mobile" value="{{ mobile }}">
+        {% else %}
+            <label for="mobile">Enter Mobile Number:</label>
+            <input type="text" name="mobile" id="mobile" required>
+        {% endif %}
+        <button type="submit">{% if otp_sent %}Login{% else %}Send OTP{% endif %}</button>
+    </form>
+</body>
+</html>

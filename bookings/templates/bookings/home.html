@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <label for="pickup_point">Select Pickup Point</label>
+    <select id="pickup_point" name="pickup_point" onchange="getDestinations()">
+        <option value="">Select Pickup Point</option>
+        {% for pickup in pickup_points %}
+            <option value="{{ pickup.id }}">{{ pickup.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="destination">Select Destination</label>
+    <select id="destination" name="destination">
+        <option value="">Select Destination</option>
+    </select>
+
+    <button type="submit">Submit</button>
+</form>
+<script type="text/javascript">
+    function getDestinations() {
+        var pickupPointId = document.getElementById("pickup_point").value;
+
+        if (pickupPointId) {
+            fetch(`/get_destinations/?pickup_point=${pickupPointId}`)
+                .then(response => response.json())
+                .then(data => {
+                    var destinationSelect = document.getElementById("destination");
+                    destinationSelect.innerHTML = '<option value="">Select Destination</option>';  // Clear existing options
+
+                    data.forEach(function(destination) {
+                        var option = document.createElement("option");
+                        option.value = destination.id;
+                        option.text = destination.name;
+                        destinationSelect.appendChild(option);
+                    });
+                });
+        } else {
+            // If no pickup point selected, reset the destination dropdown
+            document.getElementById("destination").innerHTML = '<option value="">Select Destination</option>';
+        }
+    }
+</script>
+{% endblock %}
+
